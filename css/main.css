@@ -2,13 +2,21 @@
   box-sizing: border-box;
 }
 
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-size: cover;
+}
+
 .game {
   overflow: hidden;
   margin: 0 auto;
   position: relative;
-  width: 1080px;
-  height: 520px;
-  background-color: black;
+  width: 100vw;
+  height: 100vh;
+  background: url(../assets/imgs/night_background.png);
+  background-size: cover;
 }
 
 .santa {
@@ -17,23 +25,27 @@
   bottom: 80px;
   left: 56px;
   width: 100px;
-  height: 100px;
-  background-color: red;
+  height: 130px;
+  background: url(../assets/imgs/santa.gif);
+  background-size: cover;
 }
 
 .gift {
-  z-index: 15;
-  width: 30px;
-  height: 30px;
-  background-color: green;
   position: absolute;
+  left: 100px;
+  z-index: 15;
+  width: 42px;
+  height: 42px;
+  background: url(../assets/imgs/giftbox.svg);
+  background-size: cover;
 }
 
 .fireplace {
-  width: 80px;
+  width: 120px;
   height: 160px;
   position: absolute;
-  background-color: blue;
+  background: url(../assets/imgs/fireplace.png);
+  background-size: cover;
   right: -80px;
   bottom: 0px;
 }
@@ -41,8 +53,25 @@
   position: absolute;
   bottom: 0;
   height: 80px;
-  width: 100%;
-  background-color: orange;
+  width: 2000px;
+  background: url(../assets/imgs/roof.jpg);
+}
+
+.ground {
+  position: absolute;
+  bottom: 0;
+  right: -100px;
+  height: 80px;
+  width: 100px;
+  background: url(../assets/imgs/roof.jpg);
+}
+
+.invisible {
+  width: 100px;
+  height: 5px;
+  position: absolute;
+  bottom: 80px;
+  left: 56px;
 }
 
 .lifes {
@@ -63,4 +92,13 @@
 
 .life.isLost {
   background-image: url(../assets/imgs/redCross.png);
+}
+
+.left-border {
+  position: absolute;
+  left: -100px;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background-color: red;
 }

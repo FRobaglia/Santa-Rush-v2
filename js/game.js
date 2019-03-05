@@ -5,17 +5,25 @@ let santa = {
     canJump: true,
     reachedTop: false
   },
-  canUseGift: true,
+  canThrowGift: true,
   lifes: 3
 };
 
+let a = 0;
+
 let fireplaces = [];
 let gifts = [];
+let grounds = [];
 let keyIsPressed = {};
 
 let fireplaceGen;
 
-let initialGround = document.querySelector(".initial-ground");
+let invisible = document.querySelector(".invisible");
+let currentGround = {
+  DOM: document.querySelector(".initial-ground"),
+  translateX: 0
+};
+let leftBorder = document.querySelector('.left-border');
 let game = document.querySelector(".game");
 
 function santaJump() {
@@ -30,13 +38,13 @@ function santaJump() {
       setTimeout(() => {
         santa.jump.canJump = false;
         santa.jump.reachedTop = false;
-      }, 300);
+      }, 150);
       santa.DOM.style.transform = `translateY(${santa.jump.currentJump}px)`;
     }
   } else {
     santa.jump.reachedTop = false;
     santa.jump.canJump = false;
-    if (!collisionBetween(santa.DOM, initialGround)) {
+    if (!collisionBetween(santa.DOM, currentGround.DOM)) {
       santa.jump.currentJump += 4;
       santa.DOM.style.transform = `translateY(${santa.jump.currentJump}px)`;
     } else {
@@ -71,6 +79,19 @@ function collisionBetween(el1, el2) {
   }
 }
 
+function groundGeneration() {
+  let ground = {
+    DOM: document.createElement("div"),
+    translateX: 0
+  };
+  ground.DOM.classList.add("ground");
+  game.append(ground.DOM);
+
+  grounds.push(ground);
+
+  groundGen = setTimeout(fireplaceGeneration, Math.random() * 2 + 1 * 1000);
+}
+
 function fireplaceGeneration() {
   let fireplace = {
     DOM: document.createElement("div"),
@@ -78,54 +99,60 @@ function fireplaceGeneration() {
   };
   fireplace.DOM.classList.add("fireplace");
   game.append(fireplace.DOM);
-
   fireplaces.push(fireplace);
 
-  let timeNext = Math.random() * 2 + 1;
-  fireplaceGen = setTimeout(fireplaceGeneration, timeNext * 1000);
+  fireplaceGen = setTimeout(
+    fireplaceGeneration, (Math.random() * 3 + 0.5) * 1000);
 }
 
 function moveLevel() {
+  // moving fireplaces
   for (let i = 0; i < fireplaces.length; i++) {
     const fireplace = fireplaces[i];
     fireplace.translateX -= 4;
     fireplace.DOM.style.transform = `translateX(${fireplace.translateX}px)`;
+    if (collisionBetween(fireplace.DOM, leftBorder)) {
+      fireplace.DOM.remove();
+    }
   }
+  // moving gifts
   for (let i = 0; i < gifts.length; i++) {
     const gift = gifts[i];
-    gift.translateY += 4;
-    gift.DOM.style.transform = `translate(90px, ${gift.translateY}px)`;
+    gift.translateY += 5;
+    gift.DOM.style.transform = `translateY(${gift.translateY}px)`;
   }
+  currentGround.translateX -= 4;
+  currentGround.DOM.style.transform = `translateX(${currentGround.translateX}px)`;
 }
 
 document.addEventListener("keypress", function(event) {
-  if (event.keyCode === 32 && santa.canUseGift) {
-    santa.canUseGift = false;
+  if (event.keyCode === 32 && santa.canThrowGift) {
+    santa.canThrowGift = false;
     let gift = {
       DOM: document.createElement("div"),
       translateY: getInfo(santa.DOM).y + 100
     };
     gift.DOM.classList.add("gift");
-    gift.DOM.style.transform = `translate(90px, ${gift.translateY}px)`;
+    gift.DOM.style.transform = `translateY(${gift.translateY}px)`;
     game.append(gift.DOM);
     gifts.push(gift);
 
     setTimeout(() => {
-      santa.canUseGift = true;
-    }, 500);
+      santa.canThrowGift = true;
+    }, 200);
   }
 });
 
-function checkGiftCollsion() {
+function checkGiftCollision() {
   for (let i = 0; i < gifts.length; i++) {
     const gift = gifts[i];
     for (let j = 0; j < fireplaces.length; j++) {
       const fireplace = fireplaces[j];
       if (collisionBetween(gift.DOM, fireplace.DOM)) {
         gift.DOM.remove();
-      } 
-      
-      if (collisionBetween(gift.DOM, initialGround)) {
+      }
+
+      if (collisionBetween(gift.DOM, invisible)) {
         gift.DOM.remove();
         santa.lifes--;
         if (santa.lifes <= 0) {
@@ -144,7 +171,6 @@ function checkGiftCollsion() {
 function init() {
   gameLoop();
   fireplaceGeneration();
-
   window.addEventListener(
     "keydown",
     event => {
@@ -162,7 +188,7 @@ function init() {
 }
 
 function gameLoop() {
-  checkGiftCollsion();
+  checkGiftCollision();
   santaJump();
   moveLevel();
   setTimeout(gameLoop, 10);
