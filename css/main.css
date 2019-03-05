@@ -1,8 +1,14 @@
+@font-face {
+  font-family: 'VT323';
+  src: url(/assets/fonts/VT323/VT323-Regular.ttf) format('truetype');
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
+  font-family: 'VT323';
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -19,6 +25,13 @@ body {
   background-size: cover;
 }
 
+#score {
+  font-size: 60px;
+  color: white;
+  position: absolute;
+  top: 0px;
+  left: 8px;
+}
 .santa {
   z-index: 5;
   position: absolute;
@@ -49,11 +62,12 @@ body {
   right: -80px;
   bottom: 0px;
 }
+
 .initial-ground {
   position: absolute;
   bottom: 0;
   height: 80px;
-  width: 2000px;
+  width: 100%;
   background: url(../assets/imgs/roof.jpg);
 }
 
@@ -62,7 +76,7 @@ body {
   bottom: 0;
   right: -100px;
   height: 80px;
-  width: 100px;
+  width: 1000px;
   background: url(../assets/imgs/roof.jpg);
 }
 
@@ -76,7 +90,7 @@ body {
 
 .lifes {
   position: absolute;
-  top: 8px;
+  top: 64px;
   left: 0px;
   display: flex;
   width: 150px;
@@ -100,5 +114,13 @@ body {
   top: 0;
   width: 1px;
   height: 100%;
+  background-color: red;
+}
+.bottom-border {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
   background-color: red;
 }

@@ -6,9 +6,11 @@ let santa = {
     reachedTop: false
   },
   canThrowGift: true,
-  lifes: 3
+  lifes: 3,
+  score: 0
 };
 
+let speed = 10;
 let a = 0;
 
 let fireplaces = [];
@@ -16,14 +18,26 @@ let gifts = [];
 let grounds = [];
 let keyIsPressed = {};
 
+let firstCheckpoint = false;
+let secondCheckpoint = false;
+let thirdCheckpoint = false;
+let fourthCheckpoint = false;
+let fifthCheckpoint = false;
+let lastCheckpoint = false;
+
 let fireplaceGen;
+let groundGen;
 
 let invisible = document.querySelector(".invisible");
 let currentGround = {
   DOM: document.querySelector(".initial-ground"),
   translateX: 0
 };
-let leftBorder = document.querySelector('.left-border');
+
+grounds.push(currentGround);
+
+let leftBorder = document.querySelector(".left-border");
+let bottomBorder = document.querySelector(".bottom-border");
 let game = document.querySelector(".game");
 
 function santaJump() {
@@ -47,6 +61,9 @@ function santaJump() {
     if (!collisionBetween(santa.DOM, currentGround.DOM)) {
       santa.jump.currentJump += 4;
       santa.DOM.style.transform = `translateY(${santa.jump.currentJump}px)`;
+      if (collisionBetween(santa.DOM, bottomBorder)) {
+        // gameOver();
+      }
     } else {
       santa.jump.canJump = true;
     }
@@ -79,19 +96,6 @@ function collisionBetween(el1, el2) {
   }
 }
 
-function groundGeneration() {
-  let ground = {
-    DOM: document.createElement("div"),
-    translateX: 0
-  };
-  ground.DOM.classList.add("ground");
-  game.append(ground.DOM);
-
-  grounds.push(ground);
-
-  groundGen = setTimeout(fireplaceGeneration, Math.random() * 2 + 1 * 1000);
-}
-
 function fireplaceGeneration() {
   let fireplace = {
     DOM: document.createElement("div"),
@@ -102,7 +106,9 @@ function fireplaceGeneration() {
   fireplaces.push(fireplace);
 
   fireplaceGen = setTimeout(
-    fireplaceGeneration, (Math.random() * 3 + 0.5) * 1000);
+    fireplaceGeneration,
+    (Math.random() * 3 + 0.5) * 1000
+  );
 }
 
 function moveLevel() {
@@ -121,8 +127,6 @@ function moveLevel() {
     gift.translateY += 5;
     gift.DOM.style.transform = `translateY(${gift.translateY}px)`;
   }
-  currentGround.translateX -= 4;
-  currentGround.DOM.style.transform = `translateX(${currentGround.translateX}px)`;
 }
 
 document.addEventListener("keypress", function(event) {
@@ -150,18 +154,25 @@ function checkGiftCollision() {
       const fireplace = fireplaces[j];
       if (collisionBetween(gift.DOM, fireplace.DOM)) {
         gift.DOM.remove();
+        santa.score += 500;
       }
 
-      if (collisionBetween(gift.DOM, invisible)) {
-        gift.DOM.remove();
-        santa.lifes--;
-        if (santa.lifes <= 0) {
-          document.getElementById("crossThree").classList.add("isLost");
-          // gameOver();
-        } else if (santa.lifes === 2) {
-          document.getElementById("crossOne").classList.add("isLost");
-        } else if (santa.lifes === 1) {
-          document.getElementById("crossTwo").classList.add("isLost");
+      for (let i = 0; i < grounds.length; i++) {
+        const ground = grounds[i];
+        if (
+          collisionBetween(gift.DOM, ground.DOM) ||
+          collisionBetween(gift.DOM, bottomBorder)
+        ) {
+          gift.DOM.remove();
+          santa.lifes--;
+          if (santa.lifes <= 0) {
+            document.getElementById("crossThree").classList.add("isLost");
+            // gameOver();
+          } else if (santa.lifes === 2) {
+            document.getElementById("crossOne").classList.add("isLost");
+          } else if (santa.lifes === 1) {
+            document.getElementById("crossTwo").classList.add("isLost");
+          }
         }
       }
     }
@@ -187,11 +198,40 @@ function init() {
   );
 }
 
+function updateScore() {
+  santa.score += 0.5;
+  document.getElementById("score").innerHTML = Math.floor(santa.score);
+  if (santa.score > 5000 && !firstCheckpoint) {
+    firstCheckpoint = true;
+    speed -= 1;
+  }
+  if (santa.score > 10000 && !secondCheckpoint) {
+    secondCheckpoint = true;
+    speed -= 1;
+  }
+  if (santa.score > 20000 && !thirdCheckpoint) {
+    thirdCheckpoint = true;
+    speed -= 1;
+  }
+  if (santa.score > 50000 && !fourthCheckpoint) {
+    fourthCheckpoint = true;
+    speed -= 1;
+  }
+  if (santa.score > 75000 && !fifthCheckpoint) {
+    fifthCheckpoint = true;
+    speed -= 1;
+  }
+  if (santa.score > 100000 && !lastCheckpoint) {
+    lastCheckpoint = true;
+    speed -= 2;
+  }
+}
 function gameLoop() {
   checkGiftCollision();
   santaJump();
+  updateScore();
   moveLevel();
-  setTimeout(gameLoop, 10);
+  setTimeout(gameLoop, speed);
 }
 
 init();
