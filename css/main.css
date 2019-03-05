@@ -3,14 +3,16 @@
 }
 
 .game {
+  overflow: hidden;
   margin: 0 auto;
   position: relative;
   width: 1080px;
   height: 520px;
-  background-color: wheat;
+  background-color: black;
 }
 
 .santa {
+  z-index: 5;
   position: absolute;
   bottom: 80px;
   left: 56px;
@@ -19,10 +21,46 @@
   background-color: red;
 }
 
+.gift {
+  z-index: 15;
+  width: 30px;
+  height: 30px;
+  background-color: green;
+  position: absolute;
+}
+
+.fireplace {
+  width: 80px;
+  height: 160px;
+  position: absolute;
+  background-color: blue;
+  right: -80px;
+  bottom: 0px;
+}
 .initial-ground {
   position: absolute;
   bottom: 0;
   height: 80px;
   width: 100%;
-  background-color: black;
+  background-color: orange;
+}
+
+.lifes {
+  position: absolute;
+  top: 8px;
+  left: 0px;
+  display: flex;
+  width: 150px;
+  justify-content: space-evenly;
+}
+
+.life {
+  width: 40px;
+  height: 30px;
+  background-image: url(../assets/imgs/whitecross.png);
+  background-size: cover;
+}
+
+.life.isLost {
+  background-image: url(../assets/imgs/redCross.png);
 }
