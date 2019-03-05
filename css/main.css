@@ -1,0 +1,28 @@
+* {
+  box-sizing: border-box;
+}
+
+.game {
+  margin: 0 auto;
+  position: relative;
+  width: 1080px;
+  height: 520px;
+  background-color: wheat;
+}
+
+.santa {
+  position: absolute;
+  bottom: 80px;
+  left: 56px;
+  width: 100px;
+  height: 100px;
+  background-color: red;
+}
+
+.initial-ground {
+  position: absolute;
+  bottom: 0;
+  height: 80px;
+  width: 100%;
+  background-color: black;
+}
